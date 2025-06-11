@@ -5,7 +5,7 @@ import { compare, genSalt, hash } from 'bcryptjs';
 import { Model } from 'mongoose';
 import { USER_NOT_FOUND_ERROR, WRONG_PASSWORD_ERROR } from './auth.constants';
 import { AuthDto } from './dto/auth.dto';
-import { User, UserDocument } from './user.model';
+import { User, UserDocument } from './schemas/user.schema';
 
 @Injectable()
 export class AuthService {

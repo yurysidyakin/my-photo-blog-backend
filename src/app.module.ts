@@ -5,12 +5,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { getMongoConfig } from './configs/mongo.config';
+import { PhotosModule } from './photos/photos.module';
 
 @Module({
   imports: [
     AuthModule,
+    PhotosModule,
     ConfigModule.forRoot(),
-    // MongooseModule.forRoot('mongodb://localhost/test'),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
