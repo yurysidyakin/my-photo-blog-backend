@@ -18,22 +18,22 @@ export class AuthService {
   async createUser(dto: RegisterDto) {
     const salt = await genSalt(10);
     const newUser = new this.userModel({
-      login: dto.login,
+      email: dto.login,
       name: dto.name,
       passwordHash: await hash(dto.password, salt),
     });
     return newUser.save();
   }
 
-  async findUser(login: string) {
-    return this.userModel.findOne({ login }).exec();
+  async findUser(email: string) {
+    return this.userModel.findOne({ email }).exec();
   }
 
   async validateUser(
-    login: string,
+    email: string,
     password: string,
-  ): Promise<Pick<User, 'login' | 'name'>> {
-    const user = await this.findUser(login);
+  ): Promise<Pick<User, 'email' | 'name'>> {
+    const user = await this.findUser(email);
 
     if (!user) {
       throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
@@ -42,15 +42,15 @@ export class AuthService {
     if (!isCorrectPassword) {
       throw new UnauthorizedException(WRONG_PASSWORD_ERROR);
     }
-    return { login: user.login, name: user.name };
+    return { email: user.email, name: user.name };
   }
 
-  async login(login: string) {
-    const user = await this.findUser(login);
+  async login(email: string) {
+    const user = await this.findUser(email);
     if (!user) {
       throw new UnauthorizedException(USER_NOT_FOUND_ERROR);
     }
-    const payload = { login: user.login, name: user.name, _id: user._id };
+    const payload = { email: user.email, name: user.name, _id: user._id };
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
