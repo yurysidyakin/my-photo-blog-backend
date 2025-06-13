@@ -9,7 +9,8 @@ import {
 } from '@nestjs/common';
 import { ALREADY_REGISTERED_ERROR } from './auth.constants';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto/auth.dto';
+import { RegisterDto } from './dto/auth.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -17,7 +18,7 @@ export class AuthController {
 
   @UsePipes(new ValidationPipe())
   @Post('register')
-  async register(@Body() dto: AuthDto) {
+  async register(@Body() dto: RegisterDto) {
     const oldUser = await this.authService.findUser(dto.login);
     if (oldUser) {
       throw new BadRequestException(ALREADY_REGISTERED_ERROR);
@@ -28,8 +29,8 @@ export class AuthController {
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('login')
-  async login(@Body() { login, password }: AuthDto) {
-    const user = await this.authService.validateUser(login, password);
-    return this.authService.login(user.email);
+  async login(@Body() dto: LoginDto) {
+    const user = await this.authService.validateUser(dto.login, dto.password);
+    return this.authService.login(user.login);
   }
 }
